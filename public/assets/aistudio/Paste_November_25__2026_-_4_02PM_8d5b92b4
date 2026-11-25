@@ -1,0 +1,921 @@
+# MASTER DEVELOPMENT PROMPT — CAMPUS THRIFT
+## Senior Full-Stack Engineer | Existing Product Extension | Three-Phase Implementation
+
+You are acting as a Senior Full-Stack Engineer, Product Architect and UI/UX Engineer taking ownership of an existing application called **Campus Thrift**.
+
+Your responsibility is to extend the existing application into a complete, student-focused, circular campus marketplace.
+
+This is NOT a greenfield project.
+
+An existing application has already been developed and is functional. Your first responsibility is to understand the existing codebase, preserve working functionality, and implement the remaining features without unnecessarily rewriting existing components.
+
+I will provide:
+1. The existing project ZIP/repository.
+2. This development specification.
+3. UI reference images that define the desired visual design.
+
+The provided UI reference images are extremely important. Study them carefully before modifying any frontend code.
+
+---
+
+# SECTION 1 — EXISTING IMPLEMENTATION: DO NOT REBUILD
+
+The following functionality has already been implemented and tested.
+
+### Existing technology stack
+
+Frontend:
+- HTML5
+- CSS3
+- Vanilla JavaScript (ES6+)
+- Fetch API
+- Chart.js
+- Lucide Icons
+
+Backend:
+- Node.js
+- Express.js
+- REST API architecture
+- MVC structure
+
+Database:
+- MySQL 8.0
+- mysql2/promise
+- Connection pooling
+
+Existing functionality:
+
+1. Listing creation and CRUD.
+2. Listing search and filtering.
+3. Historical dataset containing exactly 200 synthetic transactions.
+4. Duplicate prevention during dataset seeding.
+5. Data-driven pricing recommendation engine.
+6. Similarity-weighted pricing based on category, condition and age.
+7. Suggested price, minimum/maximum fair range and depreciation calculations.
+8. Explainable pricing recommendations with comparable transaction counts.
+9. Pricing analytics and Chart.js visualizations.
+10. Existing wanted board with basic request creation and display.
+11. Existing frontend/backend API integration.
+12. Existing MySQL database and schema.
+13. Existing README and PROMPT_LOG.md.
+
+The pricing engine is a particularly important component.
+
+The judge may enter a scientific calculator, its original price, age and condition. The application must calculate a suggested resale price from historical data and explain the recommendation.
+
+**Do not replace this algorithm with hardcoded prices, arbitrary percentages or an unrelated AI-generated pricing model.**
+
+Preserve the existing pricing service and extend its integration only where necessary.
+
+Before making modifications:
+- Inspect the entire project structure.
+- Read the existing README and PROMPT_LOG.md.
+- Inspect the database schema and all existing controllers, routes and services.
+- Understand the existing API contracts.
+- Run the existing application.
+- Verify which features actually work.
+- Identify missing functionality and existing technical limitations.
+
+Do not assume the supplied project description is proof that every component currently works. Verify the implementation.
+
+Do not delete working functionality to simplify development.
+
+Do not introduce another framework or database.
+
+Do not migrate the application to React, Next.js or another stack. Retain the existing vanilla JavaScript, Express and MySQL architecture unless a specific technical limitation makes a change necessary. If a change is necessary, explain it first.
+
+---
+
+# SECTION 2 — PRODUCT VISION
+
+Campus Thrift is a campus-specific circular marketplace where students can:
+
+- Buy second-hand products.
+- Sell unused belongings.
+- Swap items with other students.
+- Borrow items temporarily.
+- Rent items for a defined period.
+- Post things they need.
+- Discover relevant products through personalized recommendations.
+
+The central philosophy:
+
+"Don't buy new when someone on your campus already has what you need."
+
+This should feel like a product designed specifically for college students, not a generic e-commerce website.
+
+The application should be:
+- Friendly and approachable.
+- Playful without being childish.
+- Visually distinctive.
+- Extremely easy to navigate.
+- Privacy-conscious.
+- Practical and reliable.
+
+Avoid unnecessary complexity.
+
+---
+
+# SECTION 3 — DESIGN REQUIREMENTS
+
+I will provide multiple reference images.
+
+Treat these images as the primary visual design specification.
+
+Before coding:
+1. Inspect every provided reference image.
+2. Identify the page structure, section hierarchy, spacing, typography, card proportions, colors, borders, corner radii and navigation patterns.
+3. Map each reference image to the corresponding application page.
+4. Create a consistent design system based on the references.
+5. Reuse the same visual language across all new pages.
+
+IMPORTANT:
+
+Do not generate a generic AI-looking dashboard.
+
+Do not independently redesign the layout because you think another layout is more modern.
+
+Do not change the reference images' section ordering, major box structures, content hierarchy or layout proportions without a clear functional reason.
+
+Preserve the box-based layout and sectioning shown in the images.
+
+Use the screenshots as visual references, not merely as inspiration.
+
+Avoid:
+- Excessive gradients.
+- Random floating decorative elements.
+- Unnecessary glassmorphism.
+- Generic SaaS dashboard layouts.
+- Excessive rounded cards everywhere.
+- Repetitive AI-generated marketing copy.
+- Unnecessary animations.
+- Oversized empty hero sections.
+- Generic stock illustrations that conflict with the supplied visual identity.
+
+Use:
+- Consistent spacing.
+- Thoughtful typography.
+- Clear visual hierarchy.
+- Natural micro-interactions.
+- Friendly illustrations and small visual details.
+- Consistent icons.
+- Meaningful empty states.
+- Responsive layouts.
+
+The final product should look deliberately designed by a human product designer.
+
+Preserve existing page functionality while updating the presentation.
+
+---
+
+# SECTION 4 — FUNCTIONAL REQUIREMENTS
+
+## 4.1 Unified listing system
+
+Extend the existing listing system to support four transaction types:
+
+1. SELL
+2. SWAP
+3. BORROW
+4. RENT
+
+Do not create four independent listing systems.
+
+Use a unified listing model with a transaction_type field and type-specific attributes.
+
+Every listing should contain relevant information such as:
+
+- Listing ID.
+- Seller ID.
+- Item name.
+- Category.
+- Description.
+- Images.
+- Original purchase price.
+- Item age.
+- Condition.
+- Suggested fair price.
+- Seller asking price.
+- Transaction type.
+- Availability status.
+- Creation date.
+
+Add type-specific information without requiring irrelevant fields for other listing types.
+
+### SELL
+
+The seller should be able to define:
+
+- AI-suggested fair price.
+- Asking price.
+- Optional minimum acceptable price.
+- Whether they are willing to negotiate.
+
+The minimum acceptable price is PRIVATE.
+
+Never expose it through public APIs, listing responses, frontend HTML or buyer-facing interfaces.
+
+The buyer should be able to:
+- Request to buy at the asking price.
+- Submit an offer.
+- View whether the seller accepts negotiation.
+
+The seller should be able to:
+- Accept.
+- Reject.
+- Counteroffer.
+
+Do not introduce competitive bidding in this phase.
+
+### SWAP
+
+The seller should be able to specify:
+- What item they are offering.
+- What categories or items they are willing to receive.
+- Whether they accept multiple swap possibilities.
+
+A buyer should be able to submit a swap proposal by selecting one of their own listings or describing a proposed exchange.
+
+A swap is valid only after both parties accept the proposal.
+
+### BORROW
+
+Borrowing should support free temporary lending.
+
+The owner specifies:
+- Availability.
+- Minimum and maximum borrowing duration, if applicable.
+- Collection location.
+- Any special conditions.
+- Optional refundable deposit, if applicable.
+
+The borrower specifies:
+- Requested start date.
+- Expected return date.
+- Optional message.
+
+The owner can accept or reject.
+
+After acceptance, the item is reserved for the agreed period.
+
+Track:
+- Request.
+- Approval.
+- Collection confirmation.
+- Active borrowing.
+- Return confirmation.
+- Completion.
+
+### RENT
+
+Renting is separate from borrowing.
+
+The owner specifies:
+- Rental price per day or agreed duration.
+- Availability.
+- Minimum/maximum rental period.
+- Optional refundable deposit.
+- Collection location.
+- Rental conditions.
+
+The renter selects the required dates and submits a request.
+
+The owner accepts or rejects.
+
+Track:
+- Rental request.
+- Approval.
+- Reservation.
+- Collection.
+- Active rental.
+- Return.
+- Completion.
+
+Do not implement an integrated payment gateway.
+
+The actual payment and item inspection happen between the students during the in-person exchange.
+
+The application only manages requests, agreements, availability and confirmations.
+
+---
+
+# SECTION 5 — PRICING AND NEGOTIATION LOGIC
+
+Preserve the existing data-driven pricing engine.
+
+For SELL listings, maintain three separate price concepts:
+
+1. Suggested fair price: generated by the existing pricing engine.
+2. Asking price: entered by the seller.
+3. Minimum acceptable price: optional and private.
+
+Example:
+
+Suggested price: ₹3,000.
+Asking price: ₹3,200.
+Minimum acceptable price: ₹2,700.
+
+A buyer may offer ₹2,900.
+
+The seller can accept, reject or counter.
+
+The application must never reveal the minimum acceptable price to buyers.
+
+The suggested price is guidance, not a mandatory selling price.
+
+Do not automatically accept an offer merely because it exceeds the private minimum.
+
+For RENT listings, use rental pricing rather than treating the rental amount as the item's resale price.
+
+For BORROW listings, free lending should be supported.
+
+For SWAP listings, do not force a monetary price where an exchange is intended.
+
+---
+
+# SECTION 6 — TRANSACTION MANAGEMENT
+
+Build a proper transaction lifecycle.
+
+Never mark an item as sold, swapped, borrowed or returned simply because a user clicks a button.
+
+### SELL lifecycle
+
+AVAILABLE
+→ REQUESTED
+→ ACCEPTED
+→ RESERVED
+→ MEETING ARRANGED
+→ HANDOVER CONFIRMED
+→ COMPLETED
+
+Alternative states:
+- REJECTED
+- CANCELLED
+- EXPIRED
+- DISPUTED
+
+### SWAP lifecycle
+
+AVAILABLE
+→ SWAP PROPOSED
+→ COUNTERPROPOSED (optional)
+→ MUTUALLY ACCEPTED
+→ HANDOVER
+→ BOTH PARTIES CONFIRM
+→ COMPLETED
+
+### BORROW lifecycle
+
+AVAILABLE
+→ BORROW REQUESTED
+→ APPROVED
+→ RESERVED
+→ COLLECTED
+→ ACTIVE
+→ RETURN INITIATED
+→ BOTH PARTIES CONFIRM RETURN
+→ COMPLETED
+
+### RENT lifecycle
+
+AVAILABLE
+→ RENTAL REQUESTED
+→ APPROVED
+→ RESERVED
+→ COLLECTED
+→ RENTAL ACTIVE
+→ RETURN INITIATED
+→ BOTH PARTIES CONFIRM RETURN
+→ COMPLETED
+
+### Important transaction rules
+
+1. Only one active reservation should exist for a particular item during an overlapping period.
+2. Prevent double booking.
+3. Do not allow requests for unavailable items.
+4. Validate rental and borrowing dates.
+5. Both parties should have a clear transaction status.
+6. Allow cancellation under defined conditions.
+7. Record important transaction timestamps.
+8. Record who performed each confirmation.
+9. Make state transitions server-side and validate every transition.
+10. Use database transactions where multiple related updates must succeed together.
+
+### Reservation expiry
+
+A seller may have several interested buyers.
+
+When a seller accepts one request:
+- Temporarily reserve the item.
+- Notify the accepted buyer.
+- Give them a defined response/confirmation deadline.
+- If the reservation expires without confirmation, release the item.
+- Notify the seller and eligible waiting buyers.
+
+Do not automatically mark the next person as a buyer without the seller's consent.
+
+For borrowing and renting, expiry must also respect availability dates and overlapping reservations.
+
+---
+
+# SECTION 7 — WANTED BOARD AND MATCHING
+
+The existing wanted board is already implemented in a basic form.
+
+Extend it rather than rebuilding it.
+
+Students should be able to post a requirement with:
+
+- Item name.
+- Category.
+- Description.
+- Maximum budget.
+- Desired condition.
+- Required-by date.
+- Transaction preference: BUY, BORROW, RENT or SWAP.
+- Optional duration for borrowing/renting.
+
+Request statuses:
+
+- OPEN.
+- PARTIALLY FULFILLED.
+- FULFILLED.
+- CLOSED.
+- EXPIRED.
+
+### Matching behaviour
+
+Implement a rule-based matching service.
+
+When a wanted request is created:
+1. Search existing available listings.
+2. Compare category and item name.
+3. Check condition requirements.
+4. Check budget or rental constraints.
+5. Check availability.
+6. Return relevant matches.
+
+When a new listing is created:
+1. Find open wanted requests that match.
+2. Notify the relevant request owners.
+3. Show the matching requests to the seller where appropriate.
+
+A buyer should also be notified when a relevant listing appears after they post their requirement.
+
+Do not automatically close a wanted request when a single seller responds.
+
+Allow the student to review alternatives and close the request manually.
+
+Use a simple, explainable matching score based on item/category relevance, budget, condition and availability.
+
+Avoid complex machine learning.
+
+---
+
+# SECTION 8 — PERSONALIZATION AND CAMPUS EVENTS
+
+Build a lightweight personalization system.
+
+Collect optional user preferences such as:
+- Favourite categories.
+- Preferred price range.
+- Preferred transaction types.
+- Saved items.
+- Posted needs.
+
+Provide personalized recommendations using:
+
+1. Explicit interests.
+2. Existing wanted requests.
+3. Budget compatibility.
+4. Upcoming campus events.
+5. Availability.
+6. Listing relevance.
+
+Every recommendation should have a short explanation.
+
+Examples:
+- "Matches your saved interest in electronics."
+- "Matches your calculator request."
+- "Useful for your upcoming placement drive."
+- "Available within your budget."
+
+### Campus event calendar
+
+Create a simple campus events feature.
+
+Do not build a complicated event-management platform.
+
+Use a manageable event dataset with:
+- Event name.
+- Event date.
+- Description.
+- Relevant categories.
+- Optional event image.
+
+Examples:
+- Placement drives.
+- Dandiya night.
+- College festivals.
+- Hackathons.
+- Farewell.
+- Semester examinations.
+
+When an event is approaching, show a relevant contextual banner or recommendation.
+
+Example:
+
+"Dandiya night is coming! Explore pre-loved outfits and accessories from your campus."
+
+A placement drive could surface formal shirts, trousers, blazers, shoes and other relevant items.
+
+The calendar should drive relevant recommendations, not spam users with irrelevant pop-ups.
+
+Make event-based suggestions dismissible.
+
+Do not claim that an event is real unless it is present in the configured event data.
+
+---
+
+# SECTION 9 — ANONYMOUS IDENTITY AND TRUST
+
+Public profiles should use pseudonymous identities.
+
+Examples:
+- Panda_27 🐼
+- Mochi_14 🍡
+- Pixel_Fox 🦊
+
+Generate a random username and emoji avatar for each account.
+
+Allow users to change their avatar or select another available identity.
+
+Do not expose real names, personal email addresses or private account information publicly.
+
+However, maintain an internal account identity for authentication, transaction records and verification.
+
+### Verification
+
+Provide a campus verification mechanism.
+
+A verified badge should only be awarded when the configured verification process succeeds.
+
+Do not automatically mark every account as verified.
+
+### Ratings
+
+Only allow ratings after a completed transaction.
+
+Both buyer and seller should be able to rate each other.
+
+Ratings should include:
+- Overall rating.
+- Optional short feedback.
+- Transaction reference.
+
+Prevent:
+- Duplicate ratings.
+- Ratings for incomplete transactions.
+- Self-rating.
+
+### Trust indicators
+
+Show meaningful trust information:
+- Campus verification status.
+- Completed transactions.
+- Average rating.
+- Successful swaps.
+- Rental/borrowing history where relevant.
+
+Do not present unverified or fabricated statistics as real user achievements.
+
+Use synthetic demo users where required and label test data appropriately.
+
+---
+
+# SECTION 10 — LITTLE LOOPS: ITEM PERSONALITY
+
+Implement a lightweight, deterministic item-character system.
+
+Every listing can have a small character or mascot that speaks in first person.
+
+Examples:
+
+Bicycle:
+"Hi! I'm a bicycle. I've been around for two years, but I've still got plenty of rides left in me!"
+
+Books:
+"Hey! I've survived three semesters. Ready to help you survive yours?"
+
+Scientific calculator:
+"Psst! Exams are coming. I'm ready for those equations."
+
+A rented item:
+"I'm only visiting your desk for a week!"
+
+### Technical implementation
+
+Do not use an external LLM API for this.
+
+Use predefined templates based on:
+- Item category.
+- Item age.
+- Condition.
+- Transaction type.
+
+The mascot should have a consistent visual identity and category-specific illustration/avatar.
+
+Keep the text short and natural.
+
+Avoid repetitive or overly enthusiastic AI-generated copy.
+
+The mascot should enhance the listing, not interfere with usability.
+
+---
+
+# SECTION 11 — THREE-PHASE DEVELOPMENT PLAN
+
+Implement in exactly three phases.
+
+Do not attempt to build everything in one generation.
+
+Each phase must be completed and tested before the next phase begins.
+
+## PHASE 1 — FOUNDATION, REDESIGN AND LISTING TYPES
+
+Tasks:
+1. Audit the existing repository.
+2. Study the UI reference images.
+3. Create the shared visual design system.
+4. Redesign existing frontend pages according to the references.
+5. Preserve all existing pricing and analytics functionality.
+6. Implement pseudonymous user identities and emoji avatars.
+7. Extend listing creation to SELL, SWAP, BORROW and RENT.
+8. Implement type-specific listing fields and validation.
+9. Add asking price and private minimum acceptable price.
+10. Add availability and duration fields.
+11. Implement Little Loops item personalities.
+12. Update listing detail pages and marketplace filters.
+13. Update database schema safely.
+14. Verify backward compatibility with existing records.
+
+PHASE 1 ACCEPTANCE TESTS:
+
+- Existing pricing benchmark still works.
+- Existing historical dataset remains intact.
+- Existing listing search still works.
+- New SELL listing can be created.
+- New SWAP listing can be created.
+- New BORROW listing can be created.
+- New RENT listing can be created.
+- Private seller minimum is never exposed publicly.
+- Item mascots display appropriate content.
+- Existing analytics still work.
+- Responsive UI matches supplied references.
+
+After Phase 1, stop and provide a report.
+
+Do not start Phase 2 until instructed.
+
+## PHASE 2 — TRANSACTIONS, WANTED MATCHING AND PERSONALIZATION
+
+Tasks:
+1. Implement purchase requests.
+2. Implement offer, acceptance, rejection and counteroffer.
+3. Implement swap proposals and mutual acceptance.
+4. Implement borrowing requests and approvals.
+5. Implement rental requests and approvals.
+6. Implement reservations and expiry.
+7. Implement collection and return confirmations.
+8. Implement transaction history.
+9. Implement post-completion ratings.
+10. Implement campus verification and trust badges.
+11. Extend wanted board matching.
+12. Implement matching notifications.
+13. Implement student preferences.
+14. Implement campus events and contextual recommendations.
+15. Add personalized discovery sections.
+
+PHASE 2 ACCEPTANCE TESTS:
+
+- Purchase request lifecycle works.
+- Negotiation cannot expose the private minimum price.
+- Swap requires mutual acceptance.
+- Borrowing supports free lending and a defined return date.
+- Renting supports rental charges and date validation.
+- Overlapping reservations are prevented.
+- Both parties must confirm handover/return.
+- Completed transactions cannot be rated twice.
+- Wanted requests match existing listings.
+- New listings can match existing wanted requests.
+- Event recommendations are relevant and dismissible.
+- Recommendations respect budget and availability.
+
+After Phase 2, stop and provide a report.
+
+Do not start Phase 3 until instructed.
+
+## PHASE 3 — BIDDING, FINAL POLISH AND HARDENING
+
+Bidding is intentionally deferred until the core product works.
+
+Implement bidding only for explicitly selected high-value SELL listings.
+
+Do not enable bidding for ordinary listings, swaps, borrowing or renting.
+
+The seller should be able to enable or disable bidding.
+
+Bidding workflow:
+
+1. Seller enables bidding on an eligible listing.
+2. Interested buyers submit bids.
+3. Validate bid amount and bid deadline.
+4. Display the current highest eligible bid.
+5. Seller reviews and accepts a bid.
+6. The selected buyer receives a response deadline.
+7. If the selected buyer does not respond, expire the selection.
+8. Offer the item to the next eligible bidder, subject to seller approval.
+9. Once confirmed, continue through the standard transaction lifecycle.
+
+Do not automatically complete a transaction based on the highest bid.
+
+Then perform:
+- Full UI consistency review.
+- Mobile responsiveness testing.
+- Database consistency testing.
+- Authentication and authorization testing.
+- Input validation testing.
+- Concurrent reservation testing.
+- Regression testing.
+- Error-state and empty-state improvements.
+- Documentation updates.
+
+Ensure that bidding does not interfere with normal negotiation.
+
+---
+
+# SECTION 12 — TECHNICAL ENGINEERING REQUIREMENTS
+
+Follow the existing MVC architecture.
+
+Maintain separation between:
+- Routes.
+- Controllers.
+- Services.
+- Database access.
+- Frontend API client.
+- Frontend rendering and UI logic.
+
+Use parameterized SQL queries everywhere.
+
+Validate all user input on the backend.
+
+Never trust frontend-supplied user IDs, prices, transaction statuses or permissions.
+
+Use authenticated server-side identity when performing user-specific actions.
+
+Add appropriate database constraints and indexes.
+
+Use transactions for multi-step database operations.
+
+Handle concurrent requests safely.
+
+Prevent:
+- Duplicate reservations.
+- Unauthorized listing modifications.
+- Private price leakage.
+- Invalid transaction transitions.
+- Double completion.
+- Duplicate ratings.
+- Invalid rental dates.
+- Invalid negative prices or quantities.
+
+Use consistent API response formats.
+
+Return meaningful HTTP status codes and error messages.
+
+Do not silently swallow exceptions.
+
+Keep secrets in environment variables.
+
+Do not expose .env contents in frontend code or documentation.
+
+Avoid unnecessary dependencies.
+
+Do not introduce an external AI service unless absolutely necessary.
+
+The deterministic recommendation and mascot systems should work without an external AI API.
+
+---
+
+# SECTION 13 — AI ENGINEERING AND CODE REVIEW
+
+AI assistance must be used thoughtfully.
+
+For each major component:
+
+1. Understand the requirement before generating code.
+2. Ask AI to explain its proposed implementation.
+3. Generate code in manageable units.
+4. Inspect the output.
+5. Identify actual bugs, incorrect assumptions or missing edge cases.
+6. Correct the implementation.
+7. Run tests to verify the correction.
+
+Maintain PROMPT_LOG.md.
+
+Record:
+- Prompt used.
+- AI-generated implementation.
+- Actual mistakes discovered.
+- How the mistake was identified.
+- What was changed.
+- How the correction was tested.
+
+Do not invent AI mistakes for documentation.
+
+Do not blindly accept AI-generated code.
+
+A human team member must be able to explain every important business rule and technical decision.
+
+---
+
+# SECTION 14 — DEVELOPMENT RULES TO PREVENT ERRORS
+
+These instructions are mandatory.
+
+1. Never overwrite the entire existing project.
+2. Never delete working features to simplify implementation.
+3. Never replace the pricing algorithm with hardcoded logic.
+4. Never modify database schema without considering existing records.
+5. Never create duplicate tables or duplicate API endpoints without checking existing functionality.
+6. Never implement frontend-only business rules where backend enforcement is necessary.
+7. Never expose private seller information.
+8. Never use fake success responses to simulate completed backend operations.
+9. Never leave buttons that appear functional but have no implemented action.
+10. Never use hardcoded listing data in place of real database records for core workflows.
+11. Do not leave half-implemented features without documenting them.
+12. Do not continue to the next phase before the current phase passes its acceptance tests.
+13. Do not remove or modify the original judge demonstration scenario.
+14. Do not change the existing technology stack unnecessarily.
+15. Preserve existing user data and historical transactions.
+
+Before changing a file, understand its current responsibility and dependencies.
+
+Make small, controlled modifications.
+
+If a requested feature conflicts with the existing architecture, explain the conflict and propose the smallest safe change instead of improvising.
+
+---
+
+# SECTION 15 — REQUIRED OUTPUT AFTER EACH PHASE
+
+At the end of each phase, provide:
+
+1. Summary of features implemented.
+2. Files created.
+3. Files modified.
+4. Database schema changes.
+5. New or modified API endpoints.
+6. Tests executed.
+7. Test results.
+8. Known limitations.
+9. Any unresolved issues.
+10. Instructions to run and verify the application.
+
+Update README.md and PROMPT_LOG.md.
+
+Do not claim a feature is complete unless it has actually been implemented and tested.
+
+If a test fails, report the failure honestly.
+
+---
+
+# FINAL PRODUCT EXPECTATION
+
+The final application should feel like a genuine campus community marketplace.
+
+Students should be able to discover, buy, sell, swap, borrow and rent items without navigating complicated workflows.
+
+Sellers should have control over their pricing, availability and transactions.
+
+Buyers should have clear information, fair pricing guidance and reliable request tracking.
+
+Wanted requests should connect students with relevant listings.
+
+Personalization should make the marketplace feel relevant to campus life.
+
+Little Loops should give every item a friendly personality.
+
+The application should remain technically sound, maintainable, responsive and visually consistent with the supplied UI references.
+
+The primary goal is not to maximise the number of features.
+
+The primary goal is to create a coherent, functional and delightful product.
+
+**START WITH REPOSITORY AUDIT AND PHASE 1 ONLY.**
+
+Do not implement Phase 2 or Phase 3 until explicitly instructed.
+
+Before modifying any files, report your understanding of the existing architecture, the UI references and the proposed implementation plan. Then proceed with Phase 1 after confirming there are no critical conflicts with the existing codebase.

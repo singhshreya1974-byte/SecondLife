@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Bricolage Grotesque", system-ui, sans-serif;
+  --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    background-color: #FFFBF0;
+    color: #161816;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, .font-display {
+    font-family: var(--font-display);
+  }
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+.nb-card {
+  border: 2px solid #161816;
+  box-shadow: 4px 4px 0px #161816;
+}
+
+.nb-card-lg {
+  border: 2px solid #161816;
+  box-shadow: 6px 6px 0px #161816;
+}
+
+.nb-btn {
+  border: 2px solid #161816;
+  box-shadow: 3px 3px 0px #161816;
+  transition: transform 120ms ease, box-shadow 120ms ease, background-color 120ms ease;
+}
+
+.nb-btn:hover:not(:disabled) {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0px #161816;
+}
+
+.nb-btn:active:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 0px 0px 0px #161816;
+}
+
+.nb-btn-sm {
+  border: 2px solid #161816;
+  box-shadow: 2px 2px 0px #161816;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.nb-btn-sm:active:not(:disabled) {
+  transform: translate(1px, 1px);
+  box-shadow: 0px 0px 0px #161816;
+}

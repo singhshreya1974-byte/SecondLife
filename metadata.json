@@ -1,0 +1,6 @@
+{
+  "name": "GREEN · Second Life",
+  "description": "Campus secondhand marketplace giving seniors' books, calculators, cycles, and fest gear a fair second life with juniors.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,63 @@
+{
+  "seed": 42,
+  "total_past_sales": 200,
+  "category_summary": {
+    "Books": {
+      "count": 34,
+      "avg_retention_pct": 34,
+      "year_1_retention_pct": 44,
+      "condition_spread_pct": 29
+    },
+    "Calculators": {
+      "count": 34,
+      "avg_retention_pct": 55,
+      "year_1_retention_pct": 61,
+      "condition_spread_pct": 21
+    },
+    "Cycles": {
+      "count": 33,
+      "avg_retention_pct": 51,
+      "year_1_retention_pct": 54,
+      "condition_spread_pct": 43
+    },
+    "Lab Gear": {
+      "count": 33,
+      "avg_retention_pct": 45,
+      "year_1_retention_pct": 54,
+      "condition_spread_pct": 30
+    },
+    "Electronics": {
+      "count": 33,
+      "avg_retention_pct": 42,
+      "year_1_retention_pct": 51,
+      "condition_spread_pct": 37
+    },
+    "Hostel Items": {
+      "count": 33,
+      "avg_retention_pct": 43,
+      "year_1_retention_pct": 48,
+      "condition_spread_pct": 25
+    }
+  },
+  "seasonality": {
+    "peak_avg_pct": 47,
+    "may_dip_pct": 38
+  },
+  "findings": [
+    {
+      "title": "Calculators hold value while Books drop steepest in Year 1",
+      "metric": "55% vs 44%",
+      "detail": "Across 200 seeded sales (seed 42), Calculators retain 55% of MRP on average because exam models stay identical, whereas Books fall to 44% in Year 1 alone as editions shift."
+    },
+    {
+      "title": "Cycles care about Condition far more than Age",
+      "metric": "43 pt gap",
+      "detail": "For Cycles, the resale gap between Like New and Worn is 43 percentage points of MRP\u2014making brake/tire upkeep worth more than buying a newer year."
+    },
+    {
+      "title": "Semester-start timing adds ~10\u201315% to resale price",
+      "metric": "47% peak vs 38% May dip",
+      "detail": "Items sold during Jul\u2013Aug or Dec\u2013Jan semester rush clear at 47% average MRP retention, compared to 38% during the May move-out slump."
+    }
+  ]
+}
